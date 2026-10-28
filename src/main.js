@@ -57,7 +57,11 @@ function start() {
   // Client contract: same-origin opens in-app, anything else goes to the system browser.
   // target="_blank" links to the app origin that should leave the app (WhatsApp signup,
   // email connect) are listed in EXTERNAL_PATHS.
+  // Attachments (/api/... and blob: URLs) need the session cookie, so they open in a child window.
   win.webContents.setWindowOpenHandler(({ url }) => {
+    if (isAttachmentUrl(url)) {
+      return { action: 'allow', overrideBrowserWindowOptions: { autoHideMenuBar: true } };
+    }
     if (isAppOrigin(url) && !isExternalPath(url)) {
       win.loadURL(url);
     } else {
@@ -99,6 +103,11 @@ const EXTERNAL_PATHS = ['/settings/channels/'];
 function isExternalPath(url) {
   const { pathname } = new URL(url);
   return EXTERNAL_PATHS.some((prefix) => pathname.startsWith(prefix));
+}
+
+function isAttachmentUrl(url) {
+  if (url.startsWith('blob:')) return isAppOrigin(url.slice('blob:'.length));
+  return isAppOrigin(url) && new URL(url).pathname.startsWith('/api/');
 }
 
 // Google sign-in may navigate the top frame; let it through so Path A can be verified in the spike.

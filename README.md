@@ -27,10 +27,10 @@ The client depends on these behaviours. Any change here must land together with 
 | Contract | Shell side | Client side |
 | --- | --- | --- |
 | Detection | UA is Chromium's default with `Electron/x.y` removed and `InterlineDesktop/<version>` appended | `navigator.userAgent.includes('InterlineDesktop/')` → `isDesktop`, `desktopVersion` |
-| Link routing | `window.open` / `target="_blank"`: same origin → in-app, other origins → system browser | Plain anchors; nothing special |
+| Link routing | `window.open` / `target="_blank"`: same origin → in-app, other origins → system browser. Same-origin `/api/...` and `blob:` URLs (attachments) open in a child window that shares the session cookie | Plain anchors; nothing special |
 | Browser-only flows | Same-origin paths under `/settings/channels/` always open in the system browser (`EXTERNAL_PATHS` in `src/main.js`) | WhatsApp signup and email connect buttons link there with `target="_blank"` when `isDesktop` |
-| Unread count | Parses a leading `(n)` from the page title | Keeps `document.title` as `(n) …` |
-| Notifications | Allows `Notification` for the app origin only | Fires notifications from Pusher events; hides the service-worker / Beams prompt when `isDesktop` |
+| Unread count | Parses a leading `(n)` from the page title | **Not done yet.** `useDocumentTitle` sets `Interline - <page>` with no count. Needs a `(n) ` prefix with the total unread count |
+| Notifications | Allows `Notification` for the app origin only | **Not done yet.** OS notifications today come only from Beams web push through the service worker, which Electron doesn't support. When `isDesktop`, the Pusher `notification` user event in `PusherContext` must also call `new Notification(...)`, with `onclick` → `window.focus()` + `navigateToNotificationTarget`. Hide the Beams prompt |
 | `interline://` (Path B only) | Not registered yet | Not used yet |
 
 ## Releasing
