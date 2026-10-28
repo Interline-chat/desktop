@@ -1,0 +1,25 @@
+{
+  "name": "interline-desktop",
+  "productName": "Interline",
+  "version": "0.1.0",
+  "description": "Desktop shell for app.interline.chat",
+  "main": "src/main.js",
+  "author": "Interline",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dev": "INTERLINE_URL=${INTERLINE_URL:-http://localhost:5173} electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --publish never",
+    "release": "electron-builder --publish always"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11",
+    "electron-window-state": "^5.0.3"
+  },
+  "devDependencies": {
+    "electron": "^45.1.0",
+    "electron-builder": "^26.18.0"
+  }
+}

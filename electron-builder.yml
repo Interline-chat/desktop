@@ -1,0 +1,45 @@
+appId: chat.interline.desktop
+productName: Interline
+copyright: Copyright © 2026 Interline
+
+directories:
+  output: dist
+  buildResources: build
+
+files:
+  - src/**
+  - build/tray.png
+  - build/badge-overlay.png
+  - package.json
+
+publish:
+  provider: github
+  owner: Interline-chat
+  repo: desktop
+  releaseType: release
+
+mac:
+  category: public.app-category.productivity
+  target:
+    - target: dmg
+      arch: universal
+    - target: zip
+      arch: universal
+  hardenedRuntime: true
+  notarize: true
+  entitlements: build/entitlements.mac.plist
+  entitlementsInherit: build/entitlements.mac.plist
+
+win:
+  target:
+    - target: nsis
+      arch: x64
+  azureSignOptions:
+    publisherName: ${env.AZURE_PUBLISHER_NAME}
+    endpoint: ${env.AZURE_SIGNING_ENDPOINT}
+    codeSigningAccountName: ${env.AZURE_SIGNING_ACCOUNT}
+    certificateProfileName: ${env.AZURE_CERT_PROFILE}
+
+nsis:
+  oneClick: true
+  perMachine: false
